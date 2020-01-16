@@ -19,27 +19,18 @@ func _physics_process(delta):
 			velocity += Vector2(-1, 0)
 		if Input.is_action_pressed("ui_right"):
 			velocity += Vector2(1, 0)
-		
-#		velocity = velocity * speed
+			
 		move_and_slide(velocity * speed)
 		for i in get_slide_count():
 			var collision = get_slide_collision(i)
-		
-		# position += velocity * delta
-		# var collision_info = move_and_collide(velocity * delta)
-		# if collision_info:
-		# 	print(collision_info)
 
 		# Flips the animation if going left
 		if velocity.x != 0:
 			$AnimatedSprite.flip_h = velocity.x < 0
 
-			
-
 func start(pos):
 	position = pos
 	show()
-	$CollisionShape2D.disabled = false
 
 func enable_controls():
 	controls_enabled = true

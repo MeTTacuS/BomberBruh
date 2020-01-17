@@ -18,3 +18,11 @@ func new_game(map):
 func _on_StartTimer_timeout():
 	$Player.enable_controls()
 	$HUD.hide_message()
+
+# WIP - fix stuff please
+func _on_Player_bomb_placed(pos):
+	var scene = load("res://Scenes/Bomb.tscn")
+	var scene_insance = scene.instance()
+	scene_insance.set_name("Bomb")
+	add_child(scene_insance)
+	$Bomb.position = pos

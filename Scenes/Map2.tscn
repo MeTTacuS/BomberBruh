@@ -1,9 +1,10 @@
 [gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Scripts/Map2.gd" type="Script" id=1]
-[ext_resource path="res://Sprites/Dungeon thing/pebble_red_0_new.png" type="Texture" id=2]
-[ext_resource path="res://Sprites/Dungeon thing/orc_1.png" type="Texture" id=3]
-[ext_resource path="res://Sprites/Dungeon thing/lab-stone_0.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/MapTiles/pebble_red_0_new.png" type="Texture" id=2]
+[ext_resource path="res://Sprites/MapTiles/orc_1.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/MapTiles/lab-stone_0.png" type="Texture" id=4]
+
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )

@@ -18,6 +18,7 @@ one_shot = true
 position = Vector2( 208, 48 )
 
 [node name="HUD" parent="." instance=ExtResource( 3 )]
+[connection signal="bomb_placed" from="Player" to="." method="_on_Player_bomb_placed"]
 [connection signal="timeout" from="StartTimer" to="." method="_on_StartTimer_timeout"]
 [connection signal="start_game_map_1" from="HUD" to="." method="new_game" binds= [ 1 ]]
 [connection signal="start_game_map_2" from="HUD" to="." method="new_game" binds= [ 2 ]]

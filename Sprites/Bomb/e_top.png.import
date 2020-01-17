@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/lab-stone_0.png-e96f4809470a01e61bb0227c02f61052.stex"
+path="res://.import/e_top.png-f939ef8cda80c2749483a4c850055681.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Dungeon thing/lab-stone_0.png"
-dest_files=[ "res://.import/lab-stone_0.png-e96f4809470a01e61bb0227c02f61052.stex" ]
+source_file="res://Sprites/Bomb/e_top.png"
+dest_files=[ "res://.import/e_top.png-f939ef8cda80c2749483a4c850055681.stex" ]
 
 [params]
 

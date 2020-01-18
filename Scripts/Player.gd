@@ -1,15 +1,26 @@
 extends KinematicBody2D
-signal hit
 signal bomb_placed
 
-export var speed = 120
+var speed = 120
 var controls_enabled = false
-var bombs = 1
+var max_bombs = 2
+var current_bombs = 2
+var bomb_recharge_timer = 3
+var recharge_timer
 
 func _ready():
+	recharge_timer = get_tree().create_timer(0.0)
 	hide()
 
 func _physics_process(delta):
+	# Make it so that multiple timers spawn
+	print(current_bombs)
+	if !(current_bombs >= max_bombs):
+		if recharge_timer.time_left <= 0.0:
+			recharge_timer = get_tree().create_timer(bomb_recharge_timer)
+			yield(recharge_timer, "timeout")
+			current_bombs += 1
+			
 	if controls_enabled:
 		var velocity = Vector2()
 				
@@ -30,8 +41,8 @@ func _physics_process(delta):
 #		for i in get_slide_count():
 #			var collision = get_slide_collision(i)
 			
-			# Add bomb recharge logic
-		if Input.is_action_just_pressed("ui_select"):
+		if Input.is_action_just_pressed("ui_select") && current_bombs != 0 && current_bombs <= max_bombs:
+			current_bombs -= 1
 			emit_signal("bomb_placed", position)
 
 func start(pos):

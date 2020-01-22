@@ -11,7 +11,7 @@ func show_message(text):
 func _on_StartMap1_pressed():
 	$StartMap1.hide()
 	$StartMap2.hide()
-	emit_signal("start_game_map_1")
+	emit_signal("start_game_map_1")	
 
 func hide_message():
 	$MessageLabel.hide()

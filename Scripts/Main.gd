@@ -43,5 +43,6 @@ func _on_Player_bomb_placed(pos):
 func _on_timer_timeout(pos):
 	var explosion = explosion_scene.instance()
 	explosion.set_position(pos)
-	explosion.init($Map.get_child(0), CENTER, 2)
-	add_child(explosion)
+	add_child(explosion)	
+	explosion.init($Map.get_child(0), CENTER, 3, self)
+	

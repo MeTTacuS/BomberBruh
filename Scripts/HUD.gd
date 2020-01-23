@@ -16,7 +16,6 @@ func _on_StartMap1_pressed():
 func hide_message():
 	$MessageLabel.hide()
 
-
 func _on_StartMap2_pressed():
 	$StartMap1.hide()
 	$StartMap2.hide()

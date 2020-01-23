@@ -11,17 +11,16 @@ func _ready():
 
 func new_game(map):
 	$Player.start($StartPositionPlayer1.position);
+	$Player2.start($StartPositionPlayer2.position); # for testing purposes
 	$StartTimer.start()
+	var scene
 	if map == 1:
-		var scene = load("res://Scenes/Map1.tscn")
-		var scene_insance = scene.instance()
-		scene_insance.set_name("Map")
-		add_child(scene_insance)
+		scene = load("res://Scenes/Map1.tscn")
 	elif map == 2:
-		var scene = load("res://Scenes/Map2.tscn")
-		var scene_insance = scene.instance()
-		scene_insance.set_name("Map")
-		add_child(scene_insance)
+		scene = load("res://Scenes/Map2.tscn")
+	var scene_insance = scene.instance()
+	scene_insance.set_name("Map")
+	add_child(scene_insance)
 	$HUD.show_message("Get Ready")
 
 func _on_StartTimer_timeout():

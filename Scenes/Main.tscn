@@ -11,12 +11,23 @@ script = ExtResource( 1 )
 position = Vector2( 23.103, 15.5081 )
 speed = 120
 
+[node name="Player2" parent="." instance=ExtResource( 2 )]
+
 [node name="StartTimer" type="Timer" parent="."]
 wait_time = 3.0
 one_shot = true
 
 [node name="StartPositionPlayer1" type="Position2D" parent="."]
 position = Vector2( 208, 48 )
+
+[node name="StartPositionPlayer2" type="Position2D" parent="."]
+position = Vector2( 592, 48 )
+
+[node name="StartPositionPlayer3" type="Position2D" parent="."]
+position = Vector2( 592, 432 )
+
+[node name="StartPositionPlayer4" type="Position2D" parent="."]
+position = Vector2( 208, 432 )
 
 [node name="HUD" parent="." instance=ExtResource( 3 )]
 [connection signal="bomb_placed" from="Player" to="." method="_on_Player_bomb_placed"]

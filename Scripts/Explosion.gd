@@ -13,16 +13,12 @@ func init(tilemap, direction, strength, daddy):
 	tiles = tilemap
 	if direction == CENTER:
 		explosion_center(strength, daddy)
-		
 	if direction == UP:
 		explosion_up(strength, daddy)
-			
 	if direction == DOWN:
 		explosion_down(strength, daddy)
-		
 	if direction == LEFT:
 		explosion_left(strength, daddy)
-	
 	if direction == RIGHT:
 		explosion_right(strength, daddy)
 
@@ -163,3 +159,7 @@ func explosion_right(strength, daddy):
 	else:
 		var texture = load("res://Sprites/Bomb/e_right.png")
 		$Sprite.texture = texture
+
+func _on_Explosion_body_entered(body):
+	if body.lower_hp() != -1: #player was hit
+		pass 

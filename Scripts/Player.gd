@@ -24,9 +24,6 @@ func _physics_process(delta):
 			
 		velocity = get_player_input(velocity)
 		move_and_slide(velocity * speed)
-		# Might be useful for detecting collision and stuff
-#		for i in get_slide_count():
-#			var collision = get_slide_collision(i)
 			
 		if Input.is_action_just_pressed("ui_select") && current_bombs != 0 && current_bombs <= max_bombs:
 			handle_bomb_placement()
@@ -70,7 +67,6 @@ func get_bomb_position(position):
 	return Vector2(pos_x, pos_y)
 
 func lower_hp():
-	print(hp)
 	if can_get_hit:
 		can_get_hit = false
 		hp -= 1

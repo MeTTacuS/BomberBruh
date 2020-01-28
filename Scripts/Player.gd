@@ -4,6 +4,7 @@ signal bomb_placed
 export var speed = 120
 export var bomb_recharge_timer = 3
 var controls_enabled = false
+var animation_enabled = false
 var max_bombs = 2
 var current_bombs
 var can_get_hit = true # workaround for unknown CollisionShape2D not being disabled issue
@@ -14,16 +15,17 @@ func _ready():
 	current_bombs = 2
 	hide()
 
-func _physics_process(delta):			
+func _physics_process(delta):	
+	if animation_enabled:
+		$AnimatedSprite.play()		
 	if controls_enabled:
 		var velocity = Vector2()
-				
-		$AnimatedSprite.play()
-		if velocity.x != 0:
-			$AnimatedSprite.flip_h = velocity.x < 0
 			
 		velocity = get_player_input(velocity)
 		move_and_slide(velocity * speed)
+		
+		if velocity.x != 0:
+			$AnimatedSprite.flip_h = velocity.x < 0
 			
 		if Input.is_action_just_pressed("ui_select") && current_bombs != 0 && current_bombs <= max_bombs:
 			handle_bomb_placement()
@@ -57,6 +59,10 @@ func start(pos):
 
 func enable_controls():
 	controls_enabled = true
+	enable_animations()
+	
+func enable_animations():
+	animation_enabled = true
 	
 func _on_timer_timeout():
 	current_bombs += 1

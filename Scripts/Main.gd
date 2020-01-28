@@ -40,16 +40,7 @@ func _on_StartTimer_timeout():
 	$HUD.hide_message()
 
 func _on_Player_bomb_placed(pos):
-	var bomb = bomb_scene.instance()
-	bomb.set_position(pos)
-	add_child(bomb)
-	var timer = Timer.new()
-	timer.autostart = true
-	timer.one_shot = true
-	timer.wait_time = 3
-	timer.connect("timeout", self, "_on_timer_timeout", [ pos ])
-	add_child(timer)
-	timer.start()
+	send_bomb_placed(pos)
 	
 func _on_timer_timeout(pos):
 	var explosion = explosion_scene.instance()
@@ -59,6 +50,9 @@ func _on_timer_timeout(pos):
 
 func _on_connection_failed(error):
 	print("Error while connecting to server " + error)
+		
+func _on_connection_succeeded():
+	get_tree().multiplayer.send_bytes("need_pos".to_ascii(), 1)
 	
 func _on_peer_packet_received(id, packet):
 	var data = packet.get_string_from_ascii()
@@ -67,23 +61,50 @@ func _on_peer_packet_received(id, packet):
 	if (data == "start"): # the game has started
 		$StartTimer.start()
 	elif (data[0] == "0"): # start position received
-		var info = data.split(",")
+		var info = data.split(";")
 		$Player.start(start_positions[int(info[1])].position)
 		get_tree().multiplayer.send_bytes("ready".to_ascii(), 1)
 	elif (data[0] == "1"): # another player is in the game
-		var info = data.split(",")
+		var info = data.split(";")
 		var new_player = load("res://Scenes/Player.tscn").instance()
 		new_player.set_name(info[2])
 		$".".add_child(new_player)
 		print(get_parent().get_children())
 		get_node(info[2]).start(start_positions[int(info[1])].position)
 		other_players.append(info[2])
-	elif (data[0] == "2"):
-		var info = data.split(",")
+	elif (data[0] == "2"): # a player needs to be removed
+		var info = data.split(";")
 		print("Removing player with id " + str(info[1]))
 		get_node(info[1]).hide()
 		get_node(info[1]).queue_free()
 		other_players.erase(info[1])
-		
-func _on_connection_succeeded():
-	get_tree().multiplayer.send_bytes("need_pos".to_ascii(), 1)
+	elif (data[0] == "3"): # a bomb has been placed
+		var info = data.split(";")
+		place_bomb(info[1])
+	elif (data[0] == "4"): # someone moved
+		var info = data.split(";")
+		var replaced = info[1].replace("(", "").replace(")", "")
+		replaced = replaced.split(",")
+		var cords = Vector2(replaced[0], replaced[1])
+		get_node(info[2]).set_position(cords)
+
+func send_bomb_placed(pos):
+	get_tree().multiplayer.send_bytes(("0;" + str(pos)).to_ascii(), 1)
+
+func place_bomb(pos):
+	var replaced = pos.replace("(", "").replace(")", "")
+	replaced = replaced.split(",")
+	var cords = Vector2(replaced[0], replaced[1])
+	var bomb = bomb_scene.instance()
+	bomb.set_position(cords)
+	add_child(bomb)
+	var timer = Timer.new()
+	timer.autostart = true
+	timer.one_shot = true
+	timer.wait_time = 3
+	timer.connect("timeout", self, "_on_timer_timeout", [ cords ])
+	add_child(timer)
+	timer.start()
+
+func _on_Player_moved(pos):
+	get_tree().multiplayer.send_bytes(("1;" + str(pos) + ";" + str(get_tree().get_network_unique_id())).to_ascii(), 1)

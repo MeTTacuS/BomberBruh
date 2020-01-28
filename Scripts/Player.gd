@@ -1,5 +1,6 @@
 extends KinematicBody2D
 signal bomb_placed
+signal moved
 
 export var speed = 120
 export var bomb_recharge_timer = 3
@@ -24,11 +25,20 @@ func _physics_process(delta):
 		velocity = get_player_input(velocity)
 		move_and_slide(velocity * speed)
 		
+		if (velocity.x != 0 || velocity.y != 0):
+			emit_signal("moved", position)
+		
 		if velocity.x != 0:
 			$AnimatedSprite.flip_h = velocity.x < 0
 			
 		if Input.is_action_just_pressed("ui_select") && current_bombs != 0 && current_bombs <= max_bombs:
 			handle_bomb_placement()
+
+func _on_immunity_timer_timeout():
+	can_get_hit = true
+	
+func _on_timer_timeout():
+	current_bombs += 1
 
 func get_player_input(velocity):
 	if Input.is_action_pressed("ui_up"):
@@ -64,9 +74,6 @@ func enable_controls():
 func enable_animations():
 	animation_enabled = true
 	
-func _on_timer_timeout():
-	current_bombs += 1
-	
 func get_bomb_position(position):
 	var pos_x = int(position.x / 32) * 32 + 16
 	var pos_y = int(position.y / 32) * 32 + 16
@@ -91,5 +98,5 @@ func lower_hp():
 	else:
 		return -1
 
-func _on_immunity_timer_timeout():
-	can_get_hit = true
+func set_position(pos):
+	position = pos

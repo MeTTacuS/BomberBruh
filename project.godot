@@ -18,6 +18,10 @@ _global_script_class_icons={
 config/name="BomberBruh"
 run/main_scene="res://Scenes/Main.tscn"
 
+[debug]
+
+settings/stdout/print_fps=true
+
 [display]
 
 window/size/width=640

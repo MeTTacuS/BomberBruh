@@ -6,6 +6,7 @@ var spawn_positions = {0: null, 1: null, 2: null, 3:null}
 var connected_ids = []
 
 func _ready():
+	get_tree().multiplayer.set_root_node(self)
 	var network = NetworkedMultiplayerENet.new()
 	network.create_server(4242, 4)
 	get_tree().set_network_peer(network)
@@ -44,16 +45,25 @@ func _peer_packet_received(id, packet):
 		connected_ids.append(id)
 		if (connected_ids.size() == players_to_start):
 			send_start_game()
+	elif (data[0] == "0"): # bomb has been placed
+		var info = data.split(";")
+		print(info[1])
+		send_bomb_placed(info[1])
+	elif (data[0] == "1"): # a player has moved
+		var info = data.split(";")
+		for _id in connected_ids:
+			if (_id != int(info[2])):
+				get_tree().multiplayer.send_bytes(("4;" + str(info[1]) + ";" + str(info[2])).to_ascii(), _id)
 	
 func send_spawn_data(id):
 	for pos in spawn_positions:
 		if (spawn_positions[pos] == null):
 			spawn_positions[pos] = id
-			get_tree().multiplayer.send_bytes(("0," + (str(pos))).to_ascii(), id)
+			get_tree().multiplayer.send_bytes(("0;" + (str(pos))).to_ascii(), id)
 			send_new_user_connected(pos, id)
 			return
 		else:
-			get_tree().multiplayer.send_bytes(("1," + str(pos) + "," + str(spawn_positions[pos])).to_ascii(), id)
+			get_tree().multiplayer.send_bytes(("1;" + str(pos) + ";" + str(spawn_positions[pos])).to_ascii(), id)
 	print("Failed to find a free spot for the player")
 
 func send_start_game():
@@ -61,8 +71,16 @@ func send_start_game():
 
 func send_new_user_connected(pos, new_id):
 	for id in connected_ids:
-		get_tree().multiplayer.send_bytes(("1," + str(pos) + "," + str(new_id)).to_ascii(), id)
+		get_tree().multiplayer.send_bytes(("1;" + str(pos) + ";" + str(new_id)).to_ascii(), id)
 		
 func send_user_disconnected(id):
-	get_tree().multiplayer.send_bytes(("2," + str(id)).to_ascii())
+	get_tree().multiplayer.send_bytes(("2;" + str(id)).to_ascii())
 
+func send_bomb_placed(pos):
+	get_tree().multiplayer.send_bytes(("3;" + str(pos)).to_ascii())
+
+remote func i_moved(pos, id):
+	for _id in connected_ids:
+		if (_id != id):
+			rpc_unreliable_id(int(_id), "update_position", pos)
+#			get_tree().multiplayer.send_bytes(("4;" + str(pos) + ";" + str(id)).to_ascii(), _id)
